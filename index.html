@@ -1,455 +1,857 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Beckway · Copywriter Portal</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --navy:#0F2C52;--navy2:#1A3D6B;--orange:#F16930;--orange-lt:#FDE8DC;
   --white:#fff;--bg:#F4F6FA;--surface:#fff;
   --text:#1a2a3a;--muted:#64748b;--border:#e2e8f0;
+  --status-ns:#F1F5F9;--status-ns-t:#475569;
+  --status-ip:#DBEAFE;--status-ip-t:#1D4ED8;
+  --status-rv:#FEF9C3;--status-rv-t:#854D0E;
+  --status-rn:#FEE2E2;--status-rn-t:#991B1B;
+  --status-dn:#DCFCE7;--status-dn-t:#166534;
+  --pri-h:#FEE2E2;--pri-h-t:#991B1B;
+  --pri-m:#FEF9C3;--pri-m-t:#854D0E;
+  --pri-l:#DCFCE7;--pri-l-t:#166534;
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
 body{background:var(--bg);color:var(--text);font-size:13px;min-height:100vh}
 #app{display:flex;min-height:100vh}
-#sidebar{width:220px;background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+#sidebar{width:220px;background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
 .sb-logo{padding:20px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.1)}
-.sb-logo h1{color:#fff;font-size:15px;font-weight:700}
+.sb-logo h1{color:#fff;font-size:15px;font-weight:600;letter-spacing:.4px}
 .sb-logo p{color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px;letter-spacing:.5px;text-transform:uppercase}
 .sb-accent{height:3px;background:var(--orange);margin:0 16px 16px;border-radius:2px}
-.sb-nav{flex:1;padding:0 10px}
-.sb-nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:rgba(255,255,255,0.65);font-size:12.5px;cursor:pointer;transition:all .15s;margin-bottom:2px;text-decoration:none;border:none;background:none;width:100%}
-.sb-nav a:hover,.sb-nav a.active{background:rgba(255,255,255,0.1);color:#fff;font-weight:600}
-.sb-badge{background:var(--orange);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:auto}
-.sb-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.1)}
-#main{flex:1;overflow-y:auto;min-width:0}
-.view{display:none}.view.active{display:block}
-.page-header{display:flex;justify-content:space-between;align-items:center;padding:24px 28px 0;margin-bottom:20px}
-.page-header h2{font-size:20px;font-weight:700;color:var(--navy)}
-.page-header p{font-size:13px;color:var(--muted);margin-top:2px}
-.page-body{padding:0 28px 28px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
-.card-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border)}
-.card-header h3{font-size:13px;font-weight:600;color:var(--navy)}
-.tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th{text-align:left;padding:10px 12px;background:#F8FAFC;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);white-space:nowrap}
-td{padding:10px 12px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:#fafbfc}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
-.btn-primary{background:var(--orange);color:#fff}.btn-primary:hover{background:#d95f0e}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{background:#f8fafc}
-.btn-ghost{background:transparent;border:none;color:var(--muted);padding:4px 8px;font-family:inherit}.btn-ghost:hover{color:var(--text);background:#f1f5f9}
+.sb-nav{flex:1;padding:0 10px;overflow-y:auto}
+.sb-nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:rgba(255,255,255,0.65);font-size:12.5px;cursor:pointer;transition:all .15s;margin-bottom:2px;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.sb-nav a:hover{background:rgba(255,255,255,0.08);color:#fff}
+.sb-nav a.active{background:var(--orange);color:#fff}
+.sb-nav a .icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.sb-badge{background:var(--orange);color:#fff;font-size:10px;border-radius:99px;padding:1px 7px;margin-left:auto}
+.sb-badge.blue{background:#2563EB}
+.sb-footer{padding:14px 16px;border-top:1px solid rgba(255,255,255,0.1)}
+.sb-footer p{color:rgba(255,255,255,0.35);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+#main{flex:1;overflow:auto}
+.page-header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between}
+.page-header h2{font-size:17px;font-weight:600;color:var(--navy)}
+.page-header p{font-size:12px;color:var(--muted);margin-top:2px}
+.page-body{padding:24px 28px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--orange);color:#fff}
+.btn-primary:hover{background:#d95d22}
+.btn-outline{background:#fff;color:var(--navy);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--navy)}
 .btn-sm{padding:4px 10px;font-size:11.5px}
-.filters{display:flex;gap:8px;padding:12px 16px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
-.filters select,.filters input{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);background:#fff;outline:none;font-family:inherit}
-.badge{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap}
-.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:0 28px 20px}
-.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
-.dash-card .num{font-size:28px;font-weight:800;color:var(--navy);line-height:1}
-.dash-card .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
-.dash-card.orange{border-top:3px solid var(--orange)}
-.dash-card.navy{border-top:3px solid var(--navy)}
-.dash-card.green{border-top:3px solid #10B981}
-.dash-card.amber{border-top:3px solid #F59E0B}
-.week-bar{background:var(--navy);color:#fff;padding:16px 20px;border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-.week-bar h3{font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.7;margin-bottom:4px}
-.week-bar .num{font-size:32px;font-weight:800;line-height:1}
-.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.res-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px}
-.res-card-title{font-weight:600;font-size:13px;margin-bottom:4px}
-.res-card-desc{font-size:12px;color:var(--muted);margin-bottom:8px}
-.cat-badge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
-.empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
-.del-ver{background:#EEF2FF;color:#4338CA;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center}
-.overlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;padding:24px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
-.modal h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:18px}
-.mc{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);margin-top:-4px}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.fr{margin-bottom:12px}
-.fr label,.fg label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.fr input,.fr select,.fr textarea,.fg input,.fg select,.fg textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:7px;font-size:13px;color:var(--text);outline:none;font-family:inherit}
-.fr input:focus,.fr select:focus,.fr textarea:focus,.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--navy)}
-.mf{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy2)}
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.metric-card.ip::before{background:var(--orange)}
+.metric-card.rv::before{background:#EAB308}
+.metric-card.dn::before{background:#22C55E}
+.metric-card.ns::before{background:#94A3B8}
+.metric-card.rn::before{background:#EF4444}
+.metric-card.hrs::before{background:var(--navy)}
+.metric-card .m-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:500}
+.metric-card .m-value{font-size:30px;font-weight:700;color:var(--navy);margin:4px 0 2px;line-height:1}
+.metric-card .m-sub{font-size:11px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.card-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface)}
+.card-header h3{font-size:14px;font-weight:600;color:var(--navy)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#F8FAFC;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;font-size:10.5px;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid #f1f5f9;vertical-align:middle;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFBFF}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:500;white-space:nowrap}
+.badge.ns{background:var(--status-ns);color:var(--status-ns-t)}
+.badge.ip{background:var(--status-ip);color:var(--status-ip-t)}
+.badge.rv{background:var(--status-rv);color:var(--status-rv-t)}
+.badge.rn{background:var(--status-rn);color:var(--status-rn-t)}
+.badge.dn{background:var(--status-dn);color:var(--status-dn-t)}
+.pri{display:inline-flex;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:500}
+.pri.h{background:var(--pri-h);color:var(--pri-h-t)}
+.pri.m{background:var(--pri-m);color:var(--pri-m-t)}
+.pri.l{background:var(--pri-l);color:var(--pri-l-t)}
+.proj-name{font-weight:500;color:var(--navy)}
+.type-tag{background:#EEF2FF;color:#3730A3;font-size:10.5px;padding:2px 8px;border-radius:5px;font-weight:500}
+.filters{display:flex;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border);background:#FAFBFF;flex-wrap:wrap}
+.filters select,.filters input{padding:6px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;color:var(--text);background:#fff;outline:none}
+.filters select:focus,.filters input:focus{border-color:var(--orange)}
+.week-total-bar{background:var(--navy);color:#fff;border-radius:10px;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.week-total-bar h3{font-size:13px;opacity:.8}
+.week-total-bar .num{font-size:28px;font-weight:700}
+.week-total-bar span{font-size:12px;opacity:.7}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.res-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;transition:border-color .15s}
+.res-card:hover{border-color:var(--orange)}
+.res-card .rc-cat{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.res-card .rc-name{font-size:13.5px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.res-card .rc-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.res-card .rc-link{margin-top:10px;font-size:11.5px;color:var(--orange);font-weight:500}
+.del-ver{display:inline-block;background:#EEF2FF;color:#4338CA;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px}
+.modal-overlay{position:fixed;inset:0;background:rgba(10,20,40,.45);z-index:100;display:flex;align-items:center;justify-content:center}
+.modal{background:#fff;border-radius:14px;padding:26px;width:600px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal h3{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:18px}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:7px;font-size:13px;outline:none;font-family:inherit}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--orange)}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.view{display:none}.view.active{display:block}
+
+/* CALLS TAB */
+.call-card{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden;transition:box-shadow .15s}
+.call-card:hover{box-shadow:0 2px 12px rgba(15,44,82,.07)}
+.call-card-header{padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;cursor:pointer;background:#fff}
+.call-card-header:hover{background:#FAFBFF}
+.call-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
+.call-title{font-size:14px;font-weight:600;color:var(--navy)}
+.call-date-badge{background:var(--navy);color:#fff;font-size:10.5px;font-weight:500;padding:3px 10px;border-radius:5px;white-space:nowrap}
+.call-type-badge{font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:5px}
+.call-type-badge.kickoff{background:#EEF2FF;color:#3730A3}
+.call-type-badge.check-in{background:#DCFCE7;color:#166534}
+.call-type-badge.review{background:#FEF9C3;color:#854D0E}
+.call-type-badge.planning{background:#FDE8DC;color:#9A3412}
+.call-type-badge.other{background:#F1F5F9;color:#475569}
+.call-attendees{font-size:11.5px;color:var(--muted)}
+.call-body{padding:0 20px 20px;border-top:1px solid var(--border)}
+.call-section{margin-top:16px}
+.call-section-title{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:8px}
+.call-notes-text{font-size:13px;color:var(--text);line-height:1.65;background:#F8FAFC;padding:12px 14px;border-radius:8px;border:1px solid var(--border)}
+.action-items-list{display:flex;flex-direction:column;gap:6px}
+.action-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:#fff;transition:background .1s}
+.action-item.done-item{opacity:.6}
+.ai-check{width:16px;height:16px;border-radius:4px;border:2px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.ai-check.checked{background:var(--navy);border-color:var(--navy)}
+.ai-check.checked::after{content:'';width:4px;height:7px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);display:block}
+.ai-text{flex:1;font-size:12.5px;color:var(--text)}
+.action-item.done-item .ai-text{text-decoration:line-through;color:var(--muted)}
+.ai-owner{font-size:11px;color:var(--muted);white-space:nowrap}
+.ai-due{font-size:11px;color:var(--muted);white-space:nowrap}
+.ai-pri{flex-shrink:0}
+.call-collapsed .call-body{display:none}
+.chevron{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0;margin-left:8px}
+.chevron.open{transform:rotate(180deg)}
+.calls-toolbar{display:flex;gap:10px;padding:0 0 18px;flex-wrap:wrap;align-items:center}
+.calls-toolbar select,.calls-toolbar input{padding:6px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:#fff;outline:none}
+.open-ai-bar{background:linear-gradient(135deg,#1D4ED8,#2563EB);color:#fff;border-radius:10px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.open-ai-bar .num{font-size:26px;font-weight:700;margin-right:4px}
+.open-ai-bar p{font-size:11.5px;opacity:.8;margin-top:2px}
+.ai-proj-tag{background:#EEF2FF;color:#3730A3;font-size:10.5px;padding:2px 7px;border-radius:4px;font-weight:500}
+.add-ai-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.add-ai-row input,.add-ai-row select{padding:6px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;outline:none;background:#fff}
+.add-ai-row input:focus,.add-ai-row select:focus{border-color:var(--orange)}
 </style>
-</head>
-<body>
+
 <div id="app">
 <nav id="sidebar">
-  <div class="sb-logo"><h1>BECKWAY</h1><p>Copywriter Portal</p></div>
+  <div class="sb-logo">
+    <h1>BECKWAY</h1>
+    <p>Copywriter Portal</p>
+  </div>
   <div class="sb-accent"></div>
   <nav class="sb-nav">
-    <a class="active" onclick="go('dashboard')" id="nav-dashboard">&#9632; Dashboard</a>
-    <a onclick="go('tracker')" id="nav-tracker">&#9638; Project Tracker <span class="sb-badge" id="ip-count">0</span></a>
-    <a onclick="go('hours')" id="nav-hours">&#9670; Hours Log</a>
-    <a onclick="go('todo')" id="nav-todo">&#9679; Task Queue</a>
-    <a onclick="go('resources')" id="nav-resources">&#9632; Resources</a>
-    <a onclick="go('deliverables')" id="nav-deliverables">&#9650; Deliverables</a>
+    <a class="active" onclick="go('dashboard')" id="nav-dashboard"><span class="icon">&#9632;</span> Dashboard</a>
+    <a onclick="go('tracker')" id="nav-tracker"><span class="icon">&#9638;</span> Project Tracker <span class="sb-badge" id="ip-count">0</span></a>
+    <a onclick="go('hours')" id="nav-hours"><span class="icon">&#9670;</span> Hours Log</a>
+    <a onclick="go('todo')" id="nav-todo"><span class="icon">&#9679;</span> Task Queue</a>
+    <a onclick="go('calls')" id="nav-calls"><span class="icon">&#9654;</span> Calls &amp; Action Items <span class="sb-badge blue" id="open-ai-count">0</span></a>
+    <a onclick="go('resources')" id="nav-resources"><span class="icon">&#9632;</span> Resources</a>
+    <a onclick="go('deliverables')" id="nav-deliverables"><span class="icon">&#9650;</span> Deliverables</a>
   </nav>
-  <div class="sb-footer">
-    <div id="sb-badge" style="font-size:10px;font-weight:500;margin-bottom:8px;display:flex;align-items:center;gap:4px;"></div>
-    <button onclick="location.reload()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;width:100%;">&#8635; Refresh</button>
-    <div style="color:rgba(255,255,255,0.3);font-size:11px;margin-top:10px;">Beckway &mdash; Marketing</div>
-  </div>
+  <div class="sb-footer"><p>Beckway &mdash; Marketing</p></div>
 </nav>
 
 <div id="main">
+
+<!-- DASHBOARD -->
 <div class="view active" id="view-dashboard">
-  <div class="page-header"><div><h2>Dashboard</h2><p>Live overview of all active work</p></div></div>
-  <div class="dash-grid" id="dash-metrics"></div>
+  <div class="page-header">
+    <div><h2>Dashboard</h2><p>Live overview of all active work</p></div>
+  </div>
   <div class="page-body">
-    <div class="card"><div class="card-header"><h3>Active Projects</h3><button class="btn btn-outline btn-sm" onclick="go('tracker')">View all &rarr;</button></div><div class="tbl-wrap"><table id="dash-table"><thead><tr><th>Project</th><th>Type</th><th>Due</th><th>Priority</th><th>Status</th><th>Est.</th></tr></thead><tbody></tbody></table></div></div>
-    <div class="card"><div class="card-header"><h3>Needs Attention</h3></div><div class="tbl-wrap"><table id="attn-table"><thead><tr><th>Project</th><th>Status</th><th>Due</th><th>Stakeholder</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="dash-grid" id="dash-metrics"></div>
+    <div class="card">
+      <div class="card-header"><h3>Active projects</h3><button class="btn btn-outline btn-sm" onclick="go('tracker')">View all &rarr;</button></div>
+      <div class="tbl-wrap"><table id="dash-table"><thead><tr><th>Project</th><th>Type</th><th>Due</th><th>Priority</th><th>Status</th><th>Est. hrs</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Open action items</h3><button class="btn btn-outline btn-sm" onclick="go('calls')">View all &rarr;</button></div>
+      <div class="tbl-wrap"><table id="dash-ai-table"><thead><tr><th>Action Item</th><th>Call</th><th>Owner</th><th>Due</th><th>Priority</th></tr></thead><tbody></tbody></table></div>
+    </div>
   </div>
 </div>
 
+<!-- PROJECT TRACKER -->
 <div class="view" id="view-tracker">
-  <div class="page-header"><div><h2>Project Tracker</h2><p>All writing assignments in one place</p></div><button class="btn btn-primary" onclick="openM('project')">+ Add Project</button></div>
-  <div class="card" style="margin:0 28px 28px">
+  <div class="page-header">
+    <div><h2>Project Tracker</h2><p>All writing assignments in one place</p></div>
+    <button class="btn btn-primary" onclick="openAddProject()">+ Add Project</button>
+  </div>
+  <div class="card" style="margin:24px 28px 0">
     <div class="filters">
       <select id="f-status" onchange="renderTracker()"><option value="">All Statuses</option><option>Not Started</option><option>In Progress</option><option>Ready for Review</option><option>Revisions Needed</option><option>Complete</option></select>
       <select id="f-pri" onchange="renderTracker()"><option value="">All Priorities</option><option>High</option><option>Medium</option><option>Low</option></select>
       <select id="f-type" onchange="renderTracker()"><option value="">All Types</option></select>
-      <input id="f-search" placeholder="Search projects..." oninput="renderTracker()">
+      <input id="f-search" placeholder="Search projects..." oninput="renderTracker()" style="min-width:180px">
     </div>
-    <div class="tbl-wrap"><table><thead><tr><th>Project</th><th>Type</th><th>Bucket</th><th>Requestor</th><th>Pri</th><th>Assigned</th><th>Due</th><th>Est.</th><th>Actual</th><th>Status</th><th>Notes</th><th></th></tr></thead><tbody id="tracker-body"></tbody></table></div>
+    <div class="tbl-wrap">
+      <table><thead><tr><th>Project</th><th>Type</th><th>Bucket</th><th>Requestor</th><th>Priority</th><th>Assigned</th><th>Due</th><th>Est.</th><th>Actual</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+      <tbody id="tracker-body"></tbody></table>
+    </div>
   </div>
 </div>
 
+<!-- HOURS -->
 <div class="view" id="view-hours">
-  <div class="page-header"><div><h2>Hours Log</h2><p>Weekly time tracking by project</p></div><button class="btn btn-primary" onclick="openM('hours')">+ Log Hours</button></div>
+  <div class="page-header">
+    <div><h2>Hours Log</h2><p>Weekly time tracking by project</p></div>
+    <button class="btn btn-primary" onclick="openAddHours()">+ Log Hours</button>
+  </div>
   <div class="page-body">
-    <div class="week-bar"><div><h3>Hours logged this week</h3><div class="num" id="week-total">0</div></div><span id="week-range" style="font-size:12px;opacity:.6;"></span></div>
-    <div class="card"><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Project</th><th>Task Description</th><th>Hours</th><th>Billable</th><th>Notes</th><th></th></tr></thead><tbody id="hours-body"></tbody></table></div></div>
-  </div>
-</div>
-
-<div class="view" id="view-todo">
-  <div class="page-header"><div><h2>Task Queue</h2><p>Quick view of upcoming work</p></div><button class="btn btn-primary" onclick="openM('todo')">+ Add Task</button></div>
-  <div class="card" style="margin:0 28px 28px"><div class="tbl-wrap"><table><thead><tr><th>Task</th><th>Project</th><th>Pri</th><th>Assigned</th><th>Due</th><th>Status</th><th>Notes</th><th></th></tr></thead><tbody id="todo-body"></tbody></table></div></div>
-</div>
-
-<div class="view" id="view-resources">
-  <div class="page-header"><div><h2>Resources Library</h2><p>Reference docs, templates, brand materials</p></div><button class="btn btn-primary" onclick="openM('resource')">+ Add Resource</button></div>
-  <div style="padding:0 28px 28px">
-    <div class="filters" style="background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:16px">
-      <select id="f-res-cat" onchange="renderResources()"><option value="">All Categories</option></select>
-      <input id="f-res-search" placeholder="Search resources..." oninput="renderResources()">
+    <div class="week-total-bar">
+      <div><h3>HOURS LOGGED THIS WEEK</h3><div class="num" id="week-total">0</div></div>
+      <span id="week-range"></span>
     </div>
-    <div id="res-grid" class="res-grid"></div>
+    <div class="card">
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Date</th><th>Project</th><th>Task description</th><th>Hours</th><th>Billable</th><th>Notes</th><th></th></tr></thead>
+        <tbody id="hours-body"></tbody></table>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="view" id="view-deliverables">
-  <div class="page-header"><div><h2>Deliverables</h2><p>Draft versions and final files by project</p></div><button class="btn btn-primary" onclick="openM('deliverable')">+ Log Deliverable</button></div>
-  <div class="card" style="margin:0 28px 28px"><div class="tbl-wrap"><table><thead><tr><th>Project</th><th>Version</th><th>Link</th><th>Date</th><th>Status</th><th>Reviewer</th><th>Comments</th><th></th></tr></thead><tbody id="del-body"></tbody></table></div></div>
+<!-- TODO -->
+<div class="view" id="view-todo">
+  <div class="page-header">
+    <div><h2>Task Queue</h2><p>Quick view of upcoming and in-flight work</p></div>
+    <button class="btn btn-primary" onclick="openAddTodo()">+ Add Task</button>
+  </div>
+  <div class="card" style="margin:24px 28px 0">
+    <div class="filters">
+      <select id="tf-status" onchange="renderTodo()"><option value="">All Statuses</option><option>Not Started</option><option>In Progress</option><option>Ready for Review</option><option>Revisions Needed</option><option>Complete</option></select>
+      <select id="tf-pri" onchange="renderTodo()"><option value="">All Priorities</option><option>High</option><option>Medium</option><option>Low</option></select>
+    </div>
+    <div class="tbl-wrap">
+      <table><thead><tr><th>Task</th><th>Project</th><th>Priority</th><th>Assigned</th><th>Due</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+      <tbody id="todo-body"></tbody></table>
+    </div>
+  </div>
 </div>
-</div></div>
 
-<div class="overlay" id="overlay"><div class="modal" id="mc"></div></div>
+<!-- CALLS & ACTION ITEMS -->
+<div class="view" id="view-calls">
+  <div class="page-header">
+    <div><h2>Calls &amp; Action Items</h2><p>Meeting recaps, notes, and follow-up tracking</p></div>
+    <button class="btn btn-primary" onclick="openAddCall()">+ Log Call</button>
+  </div>
+  <div class="page-body">
+    <div class="open-ai-bar">
+      <div>
+        <div style="display:flex;align-items:baseline;gap:6px"><span class="num" id="open-ai-hero">0</span><span style="font-size:15px;font-weight:600">open action items</span></div>
+        <p id="open-ai-sub">across all calls</p>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="filterOpenAI()" id="ai-filter-btn" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff">Show open only</button>
+    </div>
+
+    <div class="calls-toolbar">
+      <select id="cf-type" onchange="renderCalls()"><option value="">All Call Types</option><option>Kickoff</option><option>Check-In</option><option>Review</option><option>Planning</option><option>Other</option></select>
+      <input id="cf-search" placeholder="Search calls or notes..." oninput="renderCalls()" style="min-width:200px">
+      <span id="call-count-label" style="font-size:12px;color:var(--muted);margin-left:auto"></span>
+    </div>
+
+    <div id="calls-list"></div>
+  </div>
+</div>
+
+<!-- RESOURCES -->
+<div class="view" id="view-resources">
+  <div class="page-header">
+    <div><h2>Resources Library</h2><p>Brand assets, templates, and reference docs</p></div>
+    <button class="btn btn-primary" onclick="openAddResource()">+ Add Resource</button>
+  </div>
+  <div class="page-body">
+    <div class="filters" style="background:transparent;padding:0 0 16px;border:none">
+      <select id="rf-cat" onchange="renderResources()"><option value="">All Categories</option><option>Brand</option><option>Writing Style</option><option>Case Study</option><option>Newsletter</option><option>LinkedIn Examples</option><option>Website</option><option>Messaging</option><option>Templates</option></select>
+      <input id="rf-search" placeholder="Search resources..." oninput="renderResources()" style="min-width:180px">
+    </div>
+    <div class="res-grid" id="res-grid"></div>
+  </div>
+</div>
+
+<!-- DELIVERABLES -->
+<div class="view" id="view-deliverables">
+  <div class="page-header">
+    <div><h2>Deliverables</h2><p>Version tracking and review status for all submitted files</p></div>
+    <button class="btn btn-primary" onclick="openAddDeliverable()">+ Log Deliverable</button>
+  </div>
+  <div class="card" style="margin:24px 28px 0">
+    <div class="tbl-wrap">
+      <table><thead><tr><th>Project</th><th>Version</th><th>File link</th><th>Submitted</th><th>Status</th><th>Reviewer</th><th>Comments</th><th></th></tr></thead>
+      <tbody id="del-body"></tbody></table>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<div id="modal-container"></div>
 
 <script>
-const SB_URL="https://jiojyzdrdqbdevpkdugb.supabase.co";
-const SB_KEY="sb_publishable_TYFKte-HdETWB9P9iT34zw_f6cQazqx";
-const HDR={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
-let _st=null;
-
-function badge(s){
-  const el=document.getElementById("sb-badge");if(!el)return;
-  const m={loading:["#86bbd8","Loading..."],saving:["#f9a825","Saving..."],saved:["#0b7a5e","\u2713 Saved \u2014 live for all"],error:["#c0392b","\u26a0 Save error"]};
-  const[c,t]=m[s]||m.saved;
-  el.innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:${c};display:inline-block;"></span><span style="color:${c};">${t}</span>`;
-}
-async function sbLoad(){
-  try{const r=await fetch(SB_URL+"/rest/v1/copywriter_data?id=eq.main&select=db_state",{headers:HDR});if(!r.ok)return null;const d=await r.json();return d[0]?.db_state||null;}catch{return null;}
-}
-async function sbSave(){
-  try{
-    const r=await fetch(SB_URL+"/rest/v1/copywriter_data",{method:"POST",headers:{...HDR,"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({id:"main",db_state:{projects:D.projects,hours:D.hours,todos:D.todos,resources:D.resources,deliverables:D.deliverables,nextId:NI},updated_at:new Date().toISOString()})});
-    if(!r.ok){badge("error");return;}badge("saved");
-  }catch{badge("error");}
-}
-function qSave(){badge("saving");clearTimeout(_st);_st=setTimeout(sbSave,1200);}
-
 const TYPES=['Case Study','Website Article','White Paper','Newsletter Content','LinkedIn Post','Thought Leadership Article','Blog Post','Press Release','Executive Bio','Speaker Bio','Website Copy','Landing Page Copy','Email Campaign Copy','Event Materials','Presentation Copy','Internal Communications','Social Media Copy','Editing / Proofreading','Research Support'];
 const BUCKETS=['Thought Leadership','Content Marketing','Social Media','Internal Comms','Events & Conferences','Business Development','Brand & Identity','Research'];
-const STATS=['Not Started','In Progress','Ready for Review','Revisions Needed','Complete'];
-const PRIS=['High','Medium','Low'];
-const RCATS=['Brand','Writing Style','Case Study','Newsletter','LinkedIn Examples','Website','Messaging','Templates','Other'];
-const CC={Brand:'#E0E7FF','Writing Style':'#DBEAFE','Case Study':'#FDE8DC',Newsletter:'#FEF9C3','LinkedIn Examples':'#DCFCE7',Website:'#F0F4F8',Messaging:'#FEE2E2',Templates:'#F3E8FF',Other:'#F1F5F9'};
-const CT={Brand:'#3730A3','Writing Style':'#1D4ED8','Case Study':'#9A3412',Newsletter:'#854D0E','LinkedIn Examples':'#166534',Website:'#334155',Messaging:'#991B1B',Templates:'#6B21A8',Other:'#475569'};
-const SM={'Not Started':['#F1F5F9','#475569'],'In Progress':['#DBEAFE','#1D4ED8'],'Ready for Review':['#FEF9C3','#854D0E'],'Revisions Needed':['#FEE2E2','#991B1B'],'Complete':['#DCFCE7','#166534'],'Draft':['#F1F5F9','#475569'],'Final':['#DCFCE7','#166534']};
-const PM={High:['#FEE2E2','#991B1B'],Medium:['#FEF9C3','#854D0E'],Low:['#DCFCE7','#166534']};
+const STATUSES=['Not Started','In Progress','Ready for Review','Revisions Needed','Complete'];
+const PRIORITIES=['High','Medium','Low'];
+const CALL_TYPES=['Kickoff','Check-In','Review','Planning','Other'];
+const CAT_COLORS={Brand:'#E0E7FF','Writing Style':'#DBEAFE','Case Study':'#FDE8DC',Newsletter:'#FEF9C3','LinkedIn Examples':'#DCFCE7',Website:'#F0F4F8',Messaging:'#FEE2E2',Templates:'#F3E8FF',Other:'#F1F5F9'};
+const CAT_TEXT={Brand:'#3730A3','Writing Style':'#1D4ED8','Case Study':'#9A3412',Newsletter:'#854D0E','LinkedIn Examples':'#166534',Website:'#334155',Messaging:'#991B1B',Templates:'#6B21A8',Other:'#475569'};
 
-let NI={p:5,h:1,t:1,r:10,d:1};
-let D={
+let showOpenOnly=false;
+
+let data={
   projects:[
-    {id:1,name:'Q2 Case Study \u2013 Operations',type:'Case Study',bucket:'Thought Leadership',req:'Chrissy / Beckway',desc:'Draft 2-page ops case study',pri:'High',assigned:'2026-03-10',due:'2026-03-24',est:6,actual:'',status:'In Progress',draft:'',final:'',notes:'Client name redacted'},
-    {id:2,name:'LinkedIn Post \u2013 AI Practice',type:'LinkedIn Post',bucket:'Social Media',req:'Mark / Leadership',desc:'Thought leadership post on AI in PE',pri:'Medium',assigned:'2026-03-12',due:'2026-03-18',est:2,actual:1.5,status:'Ready for Review',draft:'',final:'',notes:'Tone: confident, not jargony'},
-    {id:3,name:'Newsletter \u2013 March Issue',type:'Newsletter Content',bucket:'Content Marketing',req:'Danyell / Marketing',desc:'Compile and write March newsletter',pri:'High',assigned:'2026-03-01',due:'2026-03-20',est:5,actual:4,status:'Revisions Needed',draft:'',final:'',notes:'Add CFO spotlight link'},
-    {id:4,name:'Executive Bio \u2013 New MD',type:'Executive Bio',bucket:'Internal Comms',req:'Chelsey / BD',desc:'New MD bio for website',pri:'Low',assigned:'2026-03-14',due:'2026-03-28',est:1.5,actual:'',status:'Not Started',draft:'',final:'',notes:''}
+    {id:1,name:'Q2 Case Study – Operations',type:'Case Study',bucket:'Thought Leadership',req:'Chrissy / Beckway',desc:'Draft 2-page ops case study from submission',pri:'High',assigned:'2026-03-10',due:'2026-03-24',est:6,actual:'',status:'In Progress',notes:'Client name to be redacted'},
+    {id:2,name:'LinkedIn Post – AI Practice',type:'LinkedIn Post',bucket:'Social Media',req:'Mark / Leadership',desc:'Thought leadership post on AI in PE',pri:'Medium',assigned:'2026-03-12',due:'2026-03-18',est:2,actual:1.5,status:'Ready for Review',notes:'Tone: confident, not jargony'},
+    {id:3,name:'Newsletter – March Issue',type:'Newsletter Content',bucket:'Content Marketing',req:'Danyell / Marketing',desc:'Compile and write March newsletter',pri:'High',assigned:'2026-03-01',due:'2026-03-20',est:5,actual:4,status:'Revisions Needed',notes:'Add link to CFO spotlight'},
+    {id:4,name:'Executive Bio – New MD',type:'Executive Bio',bucket:'Internal Comms',req:'Chelsey / BD',desc:'Write new Managing Director bio for website',pri:'Medium',assigned:'2026-03-14',due:'2026-03-28',est:2,actual:'',status:'Not Started',notes:''},
+    {id:5,name:'White Paper – Value Creation',type:'White Paper',bucket:'Thought Leadership',req:'Mark / Leadership',desc:'Long-form piece on Beckway VC framework',pri:'Low',assigned:'2026-02-28',due:'2026-04-15',est:12,actual:3,status:'In Progress',notes:'Outline approved 3/5'},
+    {id:6,name:'Website Copy – Services Page',type:'Website Copy',bucket:'Content Marketing',req:'Chrissy / Beckway',desc:'Refresh services page copy for new ICP',pri:'High',assigned:'2026-03-15',due:'2026-03-29',est:4,actual:'',status:'Not Started',notes:'Align with GTM deck'},
   ],
-  hours:[],todos:[],
+  hours:[
+    {id:1,date:'2026-03-10',proj:'Q2 Case Study – Operations',task:'First draft outline and research',hrs:2.5,billable:'Yes',notes:''},
+    {id:2,date:'2026-03-10',proj:'LinkedIn Post – AI Practice',task:'Draft post copy, 2 versions',hrs:1.5,billable:'Yes',notes:''},
+    {id:3,date:'2026-03-11',proj:'Newsletter – March Issue',task:'Section copywriting – CFO spotlight',hrs:2.0,billable:'Yes',notes:''},
+    {id:4,date:'2026-03-12',proj:'Newsletter – March Issue',task:'Revisions from Danyell feedback',hrs:1.5,billable:'Yes',notes:''},
+    {id:5,date:'2026-03-12',proj:'Q2 Case Study – Operations',task:'Full first draft – 2 pages',hrs:3.5,billable:'Yes',notes:''},
+    {id:6,date:'2026-03-13',proj:'White Paper – Value Creation',task:'Research and outline',hrs:3.0,billable:'Yes',notes:''},
+  ],
+  todos:[
+    {id:1,task:'Write AI practice LinkedIn post',proj:'LinkedIn Post – AI Practice',pri:'Medium',assigned:'2026-03-12',due:'2026-03-18',status:'Ready for Review',notes:'2 versions submitted'},
+    {id:2,task:'Draft ops case study intro',proj:'Q2 Case Study – Operations',pri:'High',assigned:'2026-03-10',due:'2026-03-24',status:'In Progress',notes:''},
+    {id:3,task:'Newsletter revisions – CFO section',proj:'Newsletter – March Issue',pri:'High',assigned:'2026-03-13',due:'2026-03-20',status:'Revisions Needed',notes:''},
+    {id:4,task:'New MD bio – first draft',proj:'Executive Bio – New MD',pri:'Medium',assigned:'2026-03-14',due:'2026-03-28',status:'Not Started',notes:''},
+    {id:5,task:'White paper outline',proj:'White Paper – Value Creation',pri:'Low',assigned:'2026-02-28',due:'2026-04-15',status:'In Progress',notes:''},
+  ],
+  calls:[
+    {id:1,title:'Q2 Case Study Kickoff',date:'2026-03-10',type:'Kickoff',attendees:'Chrissy, Mark, Copywriter',proj:'Q2 Case Study – Operations',notes:'Reviewed submission from ops team. Agreed on 2-page format, navy/orange layout. No client names — refer to as "a mid-market manufacturing portfolio company." Mark wants first draft by 3/21 for leadership review.',
+     actionItems:[
+       {id:1,text:'First draft of case study (2 pages)',owner:'Copywriter',due:'2026-03-21',pri:'High',done:false},
+       {id:2,text:'Confirm EBITDA figures with Mark before including',owner:'Chrissy',due:'2026-03-14',pri:'High',done:true},
+       {id:3,text:'Send copywriter approved boilerplate and brand guidelines',owner:'Chrissy',due:'2026-03-11',pri:'Medium',done:true},
+     ]},
+    {id:2,title:'March Newsletter Check-In',date:'2026-03-11',type:'Check-In',attendees:'Danyell, Copywriter',proj:'Newsletter – March Issue',notes:'CFO spotlight section needs a stronger lead. Danyell flagged that the current intro is too generic. Also need to add a recap link for the Dallas offsite. Revised version due by 3/20 for send by 3/25.',
+     actionItems:[
+       {id:4,text:'Rewrite CFO spotlight intro — stronger hook, less generic',owner:'Copywriter',due:'2026-03-18',pri:'High',done:false},
+       {id:5,text:'Add Dallas offsite recap link (Danyell to send URL)',owner:'Danyell',due:'2026-03-14',pri:'Medium',done:false},
+       {id:6,text:'Final newsletter copy submitted for approval',owner:'Copywriter',due:'2026-03-20',pri:'High',done:false},
+     ]},
+    {id:3,title:'LinkedIn Post Review – AI Practice',date:'2026-03-12',type:'Review',attendees:'Mark, Copywriter',proj:'LinkedIn Post – AI Practice',notes:'Reviewed 2 versions. Mark prefers Version A — tone is right, positioning is clear. Requested one small tweak: swap out "cutting-edge" in para 2, too cliché. Approved to publish after edit.',
+     actionItems:[
+       {id:7,text:'Remove "cutting-edge" from para 2 — find sharper replacement',owner:'Copywriter',due:'2026-03-13',pri:'Medium',done:true},
+       {id:8,text:'Submit final version to Mark for sign-off',owner:'Copywriter',due:'2026-03-14',pri:'High',done:false},
+     ]},
+    {id:4,title:'White Paper Planning Session',date:'2026-03-13',type:'Planning',attendees:'Mark, Chrissy, Copywriter',proj:'White Paper – Value Creation',notes:'Aligned on structure: intro + 4 pillars + exec summary. Mark to share internal framework doc. Target is 3,000 words, readable in 10 mins. Audience is PE ops partners, not CFOs. Avoid jargon, lead with outcomes.',
+     actionItems:[
+       {id:9,text:'Mark to share internal VC framework document',owner:'Mark',due:'2026-03-17',pri:'High',done:false},
+       {id:10,text:'Develop detailed outline based on 4-pillar structure',owner:'Copywriter',due:'2026-03-21',pri:'High',done:false},
+       {id:11,text:'Draft executive summary (200 words) for early feedback',owner:'Copywriter',due:'2026-03-24',pri:'Medium',done:false},
+     ]},
+  ],
   resources:[
-    {id:1,name:'Brand Guidelines',desc:'Visual identity, logo, color palette',cat:'Brand',link:'',notes:''},
-    {id:2,name:'Tone of Voice Guide',desc:'Writing style and tone principles',cat:'Writing Style',link:'',notes:''},
-    {id:3,name:'Case Study Template',desc:'Standard 2-page structure',cat:'Case Study',link:'',notes:''},
-    {id:4,name:'Newsletter Template',desc:'Monthly newsletter layout',cat:'Newsletter',link:'',notes:''},
-    {id:5,name:'LinkedIn Post Examples',desc:'High-performing past posts',cat:'LinkedIn Examples',link:'',notes:''},
-    {id:6,name:'Website Writing Style Guide',desc:'Guidelines for web copy',cat:'Website',link:'',notes:''},
-    {id:7,name:'Past Marketing Examples',desc:'Approved collateral for reference',cat:'Other',link:'',notes:''},
-    {id:8,name:'Approved Messaging / Boilerplate',desc:'Standard company descriptions',cat:'Messaging',link:'',notes:''},
-    {id:9,name:'Case Study & Newsletter Templates',desc:'Editable template files',cat:'Templates',link:'',notes:''}
+    {id:1,name:'Brand Guidelines',desc:'Official Beckway brand standards — colors, fonts, logo usage',cat:'Brand',link:'',notes:'Primary reference for all work'},
+    {id:2,name:'Tone of Voice Guide',desc:'How Beckway sounds: direct, confident, operator-mindset',cat:'Writing Style',link:'',notes:'Read before any new project type'},
+    {id:3,name:'Case Study Template – 2-Page',desc:'Standard Beckway case study layout (pptx)',cat:'Case Study',link:'',notes:'No client names; navy/orange'},
+    {id:4,name:'Newsletter Template',desc:'Monthly newsletter layout and recurring sections',cat:'Newsletter',link:'',notes:'Calibri, navy headers'},
+    {id:5,name:'LinkedIn Post Examples',desc:'Approved examples across thought leadership and spotlights',cat:'LinkedIn Examples',link:'',notes:'Categorized by post type'},
+    {id:6,name:'Approved Boilerplate',desc:'Pre-approved company descriptions for bios, pitches, decks',cat:'Messaging',link:'',notes:'Do not modify without approval'},
+    {id:7,name:'Website Writing Style Guide',desc:'Voice, formatting rules, and SEO notes for website copy',cat:'Website',link:'',notes:''},
+    {id:8,name:'Speaker Bio Template',desc:'Standard format for conference and event speaker bios — 100 words',cat:'Templates',link:'',notes:''},
   ],
-  deliverables:[]
+  deliverables:[
+    {id:1,proj:'Q2 Case Study – Operations',ver:'v1.0',link:'',date:'2026-03-13',status:'Ready for Review',reviewer:'Chrissy',comments:'Check EBITDA metric on pg 2'},
+    {id:2,proj:'LinkedIn Post – AI Practice',ver:'v1.0',link:'',date:'2026-03-12',status:'Ready for Review',reviewer:'Mark',comments:'Approved version A with minor edits'},
+    {id:3,proj:'Newsletter – March Issue',ver:'v1.0',link:'',date:'2026-03-11',status:'Revisions Needed',reviewer:'Danyell',comments:'CFO section needs rewrite; add event recap link'},
+    {id:4,proj:'Newsletter – March Issue',ver:'v1.1',link:'',date:'2026-03-14',status:'Draft',reviewer:'Danyell',comments:'Resubmitted per feedback'},
+  ]
 };
+let nextId={p:7,h:7,t:6,r:9,d:5,c:5,ai:12};
 
-const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
-const sb=(s)=>{const[bg,c]=SM[s]||['#f1f5f9','#475569'];return`<span class="badge" style="background:${bg};color:${c};">${s}</span>`;};
-const pb=(p)=>{const[bg,c]=PM[p]||['#f1f5f9','#475569'];return`<span class="badge" style="background:${bg};color:${c};">${p}</span>`;};
-const cb=(cat)=>`<span class="cat-badge" style="background:${CC[cat]||'#f1f5f9'};color:${CT[cat]||'#475569'};">${cat}</span>`;
-const po=(sel)=>D.projects.map(p=>`<option${p.name===sel?' selected':''}>${esc(p.name)}</option>`).join('');
-const oi=(arr,val)=>arr.map(x=>`<option${x===val?' selected':''}>${x}</option>`).join('');
+function sc(s){return{NotStarted:'ns','Not Started':'ns','In Progress':'ip','Ready for Review':'rv','Revisions Needed':'rn','Complete':'dn'}[s]||'ns'}
+function pc(p){return{High:'h',Medium:'m',Low:'l'}[p]||'m'}
+function fd(d){if(!d)return'—';const p=d.split('-');return p.length===3?p[1]+'/'+p[2]+'/'+p[0]:d}
+function isThisWeek(d){const n=new Date(),day=n.getDay(),mon=new Date(n);mon.setDate(n.getDate()-(day===0?6:day-1));const sun=new Date(mon);sun.setDate(mon.getDate()+6);const dt=new Date(d);return dt>=mon&&dt<=sun}
+function callTypeClass(t){return{Kickoff:'kickoff','Check-In':'check-in',Review:'review',Planning:'planning',Other:'other'}[t]||'other'}
+function allActionItems(){return data.calls.flatMap(c=>c.actionItems.map(ai=>({...ai,callId:c.id,callTitle:c.title})))}
+function countOpenAI(){return allActionItems().filter(ai=>!ai.done).length}
 
-function go(name){
+function go(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.sb-nav a').forEach(a=>a.classList.remove('active'));
-  document.getElementById('view-'+name).classList.add('active');
-  document.getElementById('nav-'+name).classList.add('active');
-  ({dashboard:renderDash,tracker:renderTracker,hours:renderHours,todo:renderTodo,resources:renderResources,deliverables:renderDeliverables})[name]?.();
+  document.getElementById('view-'+view).classList.add('active');
+  document.getElementById('nav-'+view).classList.add('active');
+  const renders={dashboard:renderDash,tracker:renderTracker,hours:renderHours,todo:renderTodo,calls:renderCalls,resources:renderResources,deliverables:renderDeliverables};
+  if(renders[view])renders[view]();
 }
 
 function renderDash(){
-  const ip=D.projects.filter(p=>p.status==='In Progress').length;
-  const rv=D.projects.filter(p=>p.status==='Ready for Review').length;
-  const rn=D.projects.filter(p=>p.status==='Revisions Needed').length;
-  const dn=D.projects.filter(p=>p.status==='Complete').length;
-  const now=new Date(),s=new Date(now);s.setDate(now.getDate()-now.getDay()+1);const e=new Date(s);e.setDate(s.getDate()+6);
-  const wh=D.hours.filter(h=>{const d=new Date(h.date);return d>=s&&d<=e;}).reduce((sum,h)=>sum+(parseFloat(h.hrs)||0),0);
-  document.getElementById('dash-metrics').innerHTML=
-    `<div class="dash-card navy"><div class="num">${D.projects.length}</div><div class="lbl">Total Projects</div></div>`+
-    `<div class="dash-card orange"><div class="num">${ip}</div><div class="lbl">In Progress</div></div>`+
-    `<div class="dash-card amber"><div class="num">${rv}</div><div class="lbl">Ready for Review</div></div>`+
-    `<div class="dash-card amber"><div class="num">${rn}</div><div class="lbl">Revisions Needed</div></div>`+
-    `<div class="dash-card green"><div class="num">${dn}</div><div class="lbl">Complete</div></div>`+
-    `<div class="dash-card navy"><div class="num">${wh}</div><div class="lbl">Hours This Week</div></div>`;
-  document.getElementById('ip-count').textContent=ip;
-  const active=D.projects.filter(p=>p.status!=='Complete');
-  document.querySelector('#dash-table tbody').innerHTML=active.length?active.map(p=>`<tr><td style="font-weight:600">${esc(p.name)}</td><td><span style="font-size:11px;background:#f1f5f9;padding:2px 7px;border-radius:4px;">${esc(p.type)}</span></td><td>${p.due||'—'}</td><td>${pb(p.pri)}</td><td>${sb(p.status)}</td><td>${p.est||'—'}h</td></tr>`).join(''):'<tr><td colspan="6" class="empty">No active projects</td></tr>';
-  const attn=D.projects.filter(p=>['Revisions Needed','Ready for Review'].includes(p.status));
-  document.querySelector('#attn-table tbody').innerHTML=attn.length?attn.map(p=>`<tr><td style="font-weight:600">${esc(p.name)}</td><td>${sb(p.status)}</td><td>${p.due||'—'}</td><td>${esc(p.req)}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">Nothing needs attention</td></tr>';
+  const counts={ns:0,ip:0,rv:0,rn:0,dn:0};
+  data.projects.forEach(p=>{counts[sc(p.status)]++});
+  const wkHrs=data.hours.filter(h=>isThisWeek(h.date)).reduce((a,h)=>a+Number(h.hrs),0);
+  const openAI=countOpenAI();
+  document.getElementById('ip-count').textContent=counts.ip;
+  document.getElementById('open-ai-count').textContent=openAI;
+  document.getElementById('dash-metrics').innerHTML=`
+    <div class="metric-card ip"><div class="m-label">In Progress</div><div class="m-value">${counts.ip}</div><div class="m-sub">active projects</div></div>
+    <div class="metric-card rv"><div class="m-label">Ready for Review</div><div class="m-value">${counts.rv}</div><div class="m-sub">awaiting feedback</div></div>
+    <div class="metric-card rn"><div class="m-label">Revisions Needed</div><div class="m-value">${counts.rn}</div><div class="m-sub">needs attention</div></div>
+    <div class="metric-card dn"><div class="m-label">Completed</div><div class="m-value">${counts.dn}</div><div class="m-sub">this cycle</div></div>
+    <div class="metric-card ns"><div class="m-label">Not Started</div><div class="m-value">${counts.ns}</div><div class="m-sub">in queue</div></div>
+    <div class="metric-card hrs"><div class="m-label">Open Action Items</div><div class="m-value">${openAI}</div><div class="m-sub">across all calls</div></div>
+  `;
+  const active=data.projects.filter(p=>p.status!=='Complete').sort((a,b)=>a.due>b.due?1:-1);
+  document.querySelector('#dash-table tbody').innerHTML=active.map(p=>`
+    <tr><td><span class="proj-name">${p.name}</span></td>
+    <td><span class="type-tag">${p.type}</span></td>
+    <td>${fd(p.due)}</td>
+    <td><span class="pri ${pc(p.pri)}">${p.pri}</span></td>
+    <td><span class="badge ${sc(p.status)}">${p.status}</span></td>
+    <td>${p.est||'—'}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">No active projects</td></tr>';
+  const openItems=allActionItems().filter(ai=>!ai.done).sort((a,b)=>a.due>b.due?1:-1).slice(0,6);
+  document.querySelector('#dash-ai-table tbody').innerHTML=openItems.map(ai=>`
+    <tr>
+      <td><span class="proj-name" style="font-size:12px">${ai.text}</span></td>
+      <td style="font-size:11.5px;color:var(--muted)">${ai.callTitle}</td>
+      <td>${ai.owner||'—'}</td>
+      <td style="white-space:nowrap">${fd(ai.due)}</td>
+      <td><span class="pri ${pc(ai.pri)}">${ai.pri}</span></td>
+    </tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">No open action items</td></tr>';
 }
 
 function renderTracker(){
-  const st=document.getElementById('f-status')?.value||'';
-  const pri=document.getElementById('f-pri')?.value||'';
-  const ty=document.getElementById('f-type')?.value||'';
-  const q=(document.getElementById('f-search')?.value||'').toLowerCase();
-  const tf=document.getElementById('f-type');
-  if(tf&&tf.options.length<=1)TYPES.forEach(t=>{const o=document.createElement('option');o.text=t;tf.add(o);});
-  const items=D.projects.filter(p=>(!st||p.status===st)&&(!pri||p.pri===pri)&&(!ty||p.type===ty)&&(!q||p.name.toLowerCase().includes(q)||(p.req||'').toLowerCase().includes(q)));
-  document.getElementById('tracker-body').innerHTML=items.length?items.map(p=>`<tr>
-    <td style="font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(p.name)}</td>
-    <td><span style="font-size:11px;background:#f1f5f9;padding:2px 6px;border-radius:4px;">${esc(p.type)}</span></td>
-    <td style="font-size:12px;color:var(--muted)">${esc(p.bucket)}</td>
-    <td style="font-size:12px">${esc(p.req)}</td>
-    <td>${pb(p.pri)}</td>
-    <td style="font-size:12px">${p.assigned||'—'}</td>
-    <td style="font-size:12px">${p.due||'—'}</td>
-    <td style="font-size:12px">${p.est||'—'}h</td>
-    <td style="font-size:12px">${p.actual||'—'}h</td>
-    <td>${sb(p.status)}</td>
-    <td style="font-size:12px;color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(p.notes)}</td>
-    <td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" onclick="openM('project',${p.id})">Edit</button><button class="btn btn-ghost btn-sm" style="color:#ef4444" onclick="del('projects',${p.id})">&#10005;</button></td>
-  </tr>`).join(''):'<tr><td colspan="12" class="empty">No projects match your filters</td></tr>';
+  const fs=document.getElementById('f-status').value;
+  const fp=document.getElementById('f-pri').value;
+  const ft=document.getElementById('f-type').value;
+  const fq=(document.getElementById('f-search').value||'').toLowerCase();
+  const sel=document.getElementById('f-type');
+  if(sel.options.length<=1){TYPES.forEach(t=>{const o=document.createElement('option');o.value=t;o.text=t;sel.add(o)})}
+  let list=data.projects.filter(p=>{
+    if(fs&&p.status!==fs)return false;
+    if(fp&&p.pri!==fp)return false;
+    if(ft&&p.type!==ft)return false;
+    if(fq&&!p.name.toLowerCase().includes(fq)&&!p.req.toLowerCase().includes(fq))return false;
+    return true;
+  });
+  document.getElementById('tracker-body').innerHTML=list.map(p=>`
+    <tr>
+      <td style="min-width:180px"><span class="proj-name">${p.name}</span></td>
+      <td><span class="type-tag">${p.type}</span></td>
+      <td style="color:var(--muted);font-size:11.5px">${p.bucket}</td>
+      <td>${p.req}</td>
+      <td><span class="pri ${pc(p.pri)}">${p.pri}</span></td>
+      <td style="color:var(--muted)">${fd(p.assigned)}</td>
+      <td>${fd(p.due)}</td>
+      <td style="text-align:center">${p.est||'—'}</td>
+      <td style="text-align:center">${p.actual||'—'}</td>
+      <td><span class="badge ${sc(p.status)}" style="cursor:pointer" onclick="cycleStatus(${p.id})" title="Click to update status">${p.status}</span></td>
+      <td style="max-width:160px;color:var(--muted);font-size:11.5px">${p.notes||'—'}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="deleteItem('project',${p.id})">&#10005;</button></td>
+    </tr>`).join('')||'<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:32px">No projects match</td></tr>';
+}
+
+function cycleStatus(id){
+  const p=data.projects.find(x=>x.id===id);
+  if(!p)return;
+  const i=STATUSES.indexOf(p.status);
+  p.status=STATUSES[(i+1)%STATUSES.length];
+  renderTracker();renderDash();
+}
+
+function deleteItem(type,id){
+  if(!confirm('Remove this item?'))return;
+  if(type==='project')data.projects=data.projects.filter(x=>x.id!==id);
+  if(type==='hour')data.hours=data.hours.filter(x=>x.id!==id);
+  if(type==='todo')data.todos=data.todos.filter(x=>x.id!==id);
+  if(type==='resource')data.resources=data.resources.filter(x=>x.id!==id);
+  if(type==='deliverable')data.deliverables=data.deliverables.filter(x=>x.id!==id);
+  if(type==='call')data.calls=data.calls.filter(x=>x.id!==id);
+  renderAll();
 }
 
 function renderHours(){
-  const now=new Date(),s=new Date(now);s.setDate(now.getDate()-now.getDay()+1);const e=new Date(s);e.setDate(s.getDate()+6);
-  const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  document.getElementById('week-range').textContent=fmt(s)+' \u2013 '+fmt(e);
-  const wh=D.hours.filter(h=>{const d=new Date(h.date);return d>=s&&d<=e;}).reduce((sum,h)=>sum+(parseFloat(h.hrs)||0),0);
-  document.getElementById('week-total').textContent=wh;
-  const sorted=[...D.hours].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  document.getElementById('hours-body').innerHTML=sorted.length?sorted.map(h=>`<tr>
-    <td>${h.date}</td><td>${esc(h.proj)}</td><td>${esc(h.desc)}</td>
-    <td><strong>${h.hrs}h</strong></td>
-    <td><span style="font-size:11px;background:${h.billable==='Yes'?'#DCFCE7':'#F1F5F9'};color:${h.billable==='Yes'?'#166534':'#475569'};padding:2px 7px;border-radius:4px;">${h.billable||'—'}</span></td>
-    <td style="font-size:12px;color:var(--muted)">${esc(h.notes)}</td>
-    <td><button class="btn btn-ghost btn-sm" style="color:#ef4444" onclick="del('hours',${h.id})">&#10005;</button></td>
-  </tr>`).join(''):'<tr><td colspan="7" class="empty">No hours logged yet</td></tr>';
+  const wkHrs=data.hours.filter(h=>isThisWeek(h.date)).reduce((a,h)=>a+Number(h.hrs),0);
+  document.getElementById('week-total').textContent=wkHrs.toFixed(1);
+  const n=new Date(),day=n.getDay(),mon=new Date(n);mon.setDate(n.getDate()-(day===0?6:day-1));
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  document.getElementById('week-range').textContent='Week of '+mon.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' – '+sun.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const sorted=[...data.hours].sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('hours-body').innerHTML=sorted.map(h=>`
+    <tr>
+      <td style="white-space:nowrap">${fd(h.date)}</td>
+      <td><span class="proj-name" style="font-size:12px">${h.proj}</span></td>
+      <td style="max-width:220px">${h.task}</td>
+      <td style="text-align:center;font-weight:600">${h.hrs}</td>
+      <td><span class="badge ${h.billable==='Yes'?'dn':'ns'}">${h.billable}</span></td>
+      <td style="color:var(--muted)">${h.notes||'—'}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="deleteItem('hour',${h.id})">&#10005;</button></td>
+    </tr>`).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">No hours logged yet</td></tr>';
 }
 
 function renderTodo(){
-  document.getElementById('todo-body').innerHTML=D.todos.length?D.todos.map(t=>`<tr>
-    <td style="font-weight:600">${esc(t.task)}</td><td style="font-size:12px">${esc(t.proj)}</td>
-    <td>${pb(t.pri)}</td><td style="font-size:12px">${t.assigned||'—'}</td><td style="font-size:12px">${t.due||'—'}</td>
-    <td>${sb(t.status)}</td><td style="font-size:12px;color:var(--muted)">${esc(t.notes)}</td>
-    <td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" onclick="openM('todo',${t.id})">Edit</button><button class="btn btn-ghost btn-sm" style="color:#ef4444" onclick="del('todos',${t.id})">&#10005;</button></td>
-  </tr>`).join(''):'<tr><td colspan="8" class="empty">No tasks yet</td></tr>';
+  const fs=document.getElementById('tf-status').value;
+  const fp=document.getElementById('tf-pri').value;
+  let list=data.todos.filter(t=>{
+    if(fs&&t.status!==fs)return false;
+    if(fp&&t.pri!==fp)return false;
+    return true;
+  });
+  document.getElementById('todo-body').innerHTML=list.map(t=>`
+    <tr>
+      <td style="min-width:200px"><span class="proj-name" style="font-size:12px">${t.task}</span></td>
+      <td style="font-size:11.5px;color:var(--muted)">${t.proj}</td>
+      <td><span class="pri ${pc(t.pri)}">${t.pri}</span></td>
+      <td style="color:var(--muted)">${fd(t.assigned)}</td>
+      <td>${fd(t.due)}</td>
+      <td><span class="badge ${sc(t.status)}">${t.status}</span></td>
+      <td style="color:var(--muted);font-size:11.5px">${t.notes||'—'}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="deleteItem('todo',${t.id})">&#10005;</button></td>
+    </tr>`).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">Task queue is clear</td></tr>';
+}
+
+let callExpanded={};
+function filterOpenAI(){
+  showOpenOnly=!showOpenOnly;
+  document.getElementById('ai-filter-btn').textContent=showOpenOnly?'Show all calls':'Show open only';
+  renderCalls();
+}
+
+function renderCalls(){
+  const ft=document.getElementById('cf-type').value;
+  const fq=(document.getElementById('cf-search').value||'').toLowerCase();
+  const openAI=countOpenAI();
+  document.getElementById('open-ai-hero').textContent=openAI;
+  document.getElementById('open-ai-sub').textContent=openAI===1?'across all calls':'across '+data.calls.length+' calls';
+  document.getElementById('open-ai-count').textContent=openAI;
+
+  let list=[...data.calls].filter(c=>{
+    if(ft&&c.type!==ft)return false;
+    if(fq&&!c.title.toLowerCase().includes(fq)&&!c.notes.toLowerCase().includes(fq)&&!c.attendees.toLowerCase().includes(fq))return false;
+    if(showOpenOnly&&!c.actionItems.some(ai=>!ai.done))return false;
+    return true;
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+
+  document.getElementById('call-count-label').textContent=list.length+' call'+(list.length!==1?'s':'');
+
+  document.getElementById('calls-list').innerHTML=list.map(c=>{
+    const open=c.actionItems.filter(ai=>!ai.done).length;
+    const total=c.actionItems.length;
+    const expanded=callExpanded[c.id]!==false;
+    return`<div class="call-card${expanded?'':' call-collapsed'}" id="callcard-${c.id}">
+      <div class="call-card-header" onclick="toggleCall(${c.id})">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="call-title">${c.title}</span>
+            <span class="chevron${expanded?' open':''}">&#9660;</span>
+          </div>
+          <div class="call-meta">
+            <span class="call-date-badge">${fd(c.date)}</span>
+            <span class="call-type-badge ${callTypeClass(c.type)}">${c.type}</span>
+            ${c.proj?`<span class="ai-proj-tag">${c.proj}</span>`:''}
+            <span class="call-attendees">${c.attendees}</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:12px">
+          ${open>0?`<span class="badge ip">${open} open</span>`:`<span class="badge dn">all done</span>`}
+          <span style="font-size:11px;color:var(--muted)">${total} action${total!==1?'s':''}</span>
+          <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();deleteItem('call',${c.id})" style="margin-left:4px">&#10005;</button>
+        </div>
+      </div>
+      <div class="call-body">
+        <div class="call-section">
+          <div class="call-section-title">Call notes</div>
+          <div class="call-notes-text">${c.notes||'No notes recorded.'}</div>
+        </div>
+        <div class="call-section">
+          <div class="call-section-title" style="display:flex;align-items:center;justify-content:space-between">
+            <span>Action items</span>
+            <span style="font-size:11px;color:var(--muted)">${open} of ${total} open</span>
+          </div>
+          <div class="action-items-list">
+            ${c.actionItems.map(ai=>`
+              <div class="action-item${ai.done?' done-item':''}" id="ai-${ai.id}">
+                <div class="ai-check${ai.done?' checked':''}" onclick="toggleAI(${c.id},${ai.id})"></div>
+                <div class="ai-text">${ai.text}</div>
+                ${ai.owner?`<div class="ai-owner" style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:11px">${ai.owner}</div>`:''}
+                ${ai.due?`<div class="ai-due">${fd(ai.due)}</div>`:''}
+                <span class="ai-pri pri ${pc(ai.pri)}">${ai.pri}</span>
+              </div>`).join('')}
+          </div>
+          <div class="add-ai-row" style="margin-top:12px">
+            <input placeholder="New action item..." id="new-ai-text-${c.id}" style="flex:1;min-width:160px" onkeydown="if(event.key==='Enter')addAI(${c.id})">
+            <input placeholder="Owner" id="new-ai-owner-${c.id}" style="width:110px">
+            <input type="date" id="new-ai-due-${c.id}" style="width:130px">
+            <select id="new-ai-pri-${c.id}" style="width:90px"><option>High</option><option selected>Medium</option><option>Low</option></select>
+            <button class="btn btn-navy btn-sm" onclick="addAI(${c.id})">+ Add</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('')||'<div style="text-align:center;padding:48px;color:var(--muted)"><div style="font-size:28px;margin-bottom:10px">&#128222;</div><p>No calls logged yet. Add one to get started.</p></div>';
+}
+
+function toggleCall(id){
+  callExpanded[id]=callExpanded[id]===false?true:false;
+  renderCalls();
+}
+
+function toggleAI(callId,aiId){
+  const c=data.calls.find(x=>x.id===callId);
+  if(!c)return;
+  const ai=c.actionItems.find(x=>x.id===aiId);
+  if(ai)ai.done=!ai.done;
+  renderCalls();renderDash();
+}
+
+function addAI(callId){
+  const text=(document.getElementById('new-ai-text-'+callId).value||'').trim();
+  if(!text)return;
+  const c=data.calls.find(x=>x.id===callId);
+  if(!c)return;
+  c.actionItems.push({
+    id:nextId.ai++,
+    text,
+    owner:document.getElementById('new-ai-owner-'+callId).value,
+    due:document.getElementById('new-ai-due-'+callId).value,
+    pri:document.getElementById('new-ai-pri-'+callId).value,
+    done:false
+  });
+  renderCalls();renderDash();
 }
 
 function renderResources(){
-  const cat=document.getElementById('f-res-cat')?.value||'';
-  const q=(document.getElementById('f-res-search')?.value||'').toLowerCase();
-  const cf=document.getElementById('f-res-cat');
-  if(cf&&cf.options.length<=1)RCATS.forEach(c=>{const o=document.createElement('option');o.text=c;cf.add(o);});
-  const items=D.resources.filter(r=>(!cat||r.cat===cat)&&(!q||r.name.toLowerCase().includes(q)||(r.desc||'').toLowerCase().includes(q)));
-  document.getElementById('res-grid').innerHTML=items.length?items.map(r=>`<div class="res-card">
-    ${cb(r.cat)}<div class="res-card-title">${esc(r.name)}</div>
-    <div class="res-card-desc">${esc(r.desc)}</div>
-    ${r.link?`<a href="${esc(r.link)}" target="_blank" style="font-size:12px;color:var(--orange);text-decoration:none;">Open &rarr;</a>`:''}
-    ${r.notes?`<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic">${esc(r.notes)}</div>`:''}
-    <div style="margin-top:10px;display:flex;gap:6px"><button class="btn btn-ghost btn-sm" onclick="openM('resource',${r.id})">Edit</button><button class="btn btn-ghost btn-sm" style="color:#ef4444" onclick="del('resources',${r.id})">Remove</button></div>
-  </div>`).join(''):'<div class="empty" style="padding:40px">No resources match</div>';
+  const fc=document.getElementById('rf-cat').value;
+  const fq=(document.getElementById('rf-search').value||'').toLowerCase();
+  let list=data.resources.filter(r=>{
+    if(fc&&r.cat!==fc)return false;
+    if(fq&&!r.name.toLowerCase().includes(fq)&&!r.desc.toLowerCase().includes(fq))return false;
+    return true;
+  });
+  document.getElementById('res-grid').innerHTML=list.map(r=>{
+    const bg=CAT_COLORS[r.cat]||'#F1F5F9';
+    const tc=CAT_TEXT[r.cat]||'#475569';
+    return`<div class="res-card">
+      <div style="background:${bg};color:${tc};display:inline-block;padding:2px 10px;border-radius:5px;font-size:10.5px;font-weight:600;margin-bottom:8px">${r.cat}</div>
+      <div class="rc-name">${r.name}</div>
+      <div class="rc-desc">${r.desc}</div>
+      ${r.link?`<div class="rc-link">Open resource &rarr;</div>`:`<div style="margin-top:10px;font-size:11.5px;color:var(--muted)">[No link added yet]</div>`}
+      ${r.notes?`<div style="font-size:11px;color:var(--muted);margin-top:6px;font-style:italic">${r.notes}</div>`:''}
+      <div style="margin-top:10px"><button class="btn btn-outline btn-sm" onclick="deleteItem('resource',${r.id})">Remove</button></div>
+    </div>`;
+  }).join('')||'<div style="text-align:center;padding:48px;color:var(--muted)">No resources match</div>';
 }
 
 function renderDeliverables(){
-  document.getElementById('del-body').innerHTML=D.deliverables.length?D.deliverables.map(d=>`<tr>
-    <td style="font-weight:600">${esc(d.proj)}</td>
-    <td><span class="del-ver">${esc(d.ver)}</span></td>
-    <td>${d.link?`<a href="${esc(d.link)}" target="_blank" style="color:var(--orange);font-size:12px;">Open</a>`:'—'}</td>
-    <td style="font-size:12px">${d.date||'—'}</td><td>${sb(d.status)}</td>
-    <td style="font-size:12px">${esc(d.reviewer)}</td>
-    <td style="font-size:12px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.comments)}</td>
-    <td><button class="btn btn-ghost btn-sm" style="color:#ef4444" onclick="del('deliverables',${d.id})">&#10005;</button></td>
-  </tr>`).join(''):'<tr><td colspan="8" class="empty">No deliverables logged yet</td></tr>';
+  const delSC={Draft:'ip','Ready for Review':'rv','Revisions Needed':'rn',Final:'dn'};
+  document.getElementById('del-body').innerHTML=data.deliverables.map(d=>`
+    <tr>
+      <td><span class="proj-name" style="font-size:12px">${d.proj}</span></td>
+      <td><span class="del-ver">${d.ver}</span></td>
+      <td style="color:var(--orange);font-size:11.5px">${d.link||'[No link]'}</td>
+      <td style="color:var(--muted)">${fd(d.date)}</td>
+      <td><span class="badge ${delSC[d.status]||'ns'}">${d.status}</span></td>
+      <td>${d.reviewer}</td>
+      <td style="max-width:200px;color:var(--muted);font-size:11.5px">${d.comments||'—'}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="deleteItem('deliverable',${d.id})">&#10005;</button></td>
+    </tr>`).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">No deliverables logged yet</td></tr>';
 }
 
-function del(type,id){if(!confirm('Remove this item?'))return;D[type]=D[type].filter(x=>x.id!==id);renderAll();qSave();}
-function renderAll(){renderDash();renderTracker();renderHours();renderTodo();renderResources();renderDeliverables();}
+function renderAll(){renderDash();renderTracker();renderHours();renderTodo();renderCalls();renderResources();renderDeliverables()}
 
-let _mt='',_mid=null;
-function openM(type,id){
-  _mt=type;_mid=id||null;
-  document.getElementById('overlay').classList.add('open');
-  const mc=document.getElementById('mc');
-  const g=k=>document.getElementById(k);
-  const v=k=>g(k)?.value||'';
-  const cl=`<button class="mc" onclick="closeM()">&#10005;</button>`;
-  if(type==='project'){
-    const p=id?D.projects.find(x=>x.id===id):{};
-    mc.innerHTML=`${cl}<h3>${id?'Edit':'New'} Project</h3>
-    <div class="fr"><label>Project Name</label><input id="m-name" value="${esc(p.name||'')}"></div>
-    <div class="fg">
-      <label>Type<select id="m-type">${oi(TYPES,p.type||'')}</select></label>
-      <label>Marketing Bucket<select id="m-bucket">${oi(BUCKETS,p.bucket||'')}</select></label>
-      <label>Stakeholder / Requestor<input id="m-req" value="${esc(p.req||'')}"></label>
-      <label>Priority<select id="m-pri">${oi(PRIS,p.pri||'')}</select></label>
-      <label>Date Assigned<input type="date" id="m-assigned" value="${p.assigned||''}"></label>
-      <label>Due Date<input type="date" id="m-due" value="${p.due||''}"></label>
-      <label>Estimated Hours<input type="number" id="m-est" value="${p.est||''}" step="0.5" min="0"></label>
-      <label>Actual Hours<input type="number" id="m-actual" value="${p.actual||''}" step="0.5" min="0"></label>
+function modal(html){document.getElementById('modal-container').innerHTML=`<div class="modal-overlay" onclick="closeModal(event)"><div class="modal">${html}</div></div>`}
+function closeModal(e){if(e.target.classList.contains('modal-overlay'))document.getElementById('modal-container').innerHTML=''}
+function closeModalForce(){document.getElementById('modal-container').innerHTML=''}
+
+function openAddCall(){
+  const aiRows=`<div id="ai-rows"></div>
+  <button class="btn btn-outline btn-sm" onclick="addAIRow()" style="margin-top:8px">+ Add action item</button>`;
+  modal(`<h3>Log Call / Meeting</h3>
+    <div class="form-row"><label>Meeting Title</label><input id="c-title" placeholder="e.g. March Newsletter Review"></div>
+    <div class="form-3col">
+      <div class="form-row"><label>Date</label><input id="c-date" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+      <div class="form-row"><label>Call Type</label><select id="c-type">${CALL_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="form-row"><label>Project</label><select id="c-proj"><option value="">-- Optional --</option>${data.projects.map(p=>`<option>${p.name}</option>`).join('')}</select></div>
     </div>
-    <div class="fr"><label>Description</label><textarea id="m-desc" rows="2">${esc(p.desc||'')}</textarea></div>
-    <div class="fg">
-      <label>Status<select id="m-status">${oi(STATS,p.status||'Not Started')}</select></label>
-      <label>Link to Draft<input id="m-draft" value="${esc(p.draft||'')}"></label>
-      <label>Link to Final<input id="m-final" value="${esc(p.final||'')}"></label>
-    </div>
-    <div class="fr"><label>Notes / Feedback</label><textarea id="m-notes" rows="2">${esc(p.notes||'')}</textarea></div>
-    <div class="mf"><button class="btn btn-outline" onclick="closeM()">Cancel</button><button class="btn btn-primary" onclick="saveM()">Save Project</button></div>`;
-  } else if(type==='hours'){
-    mc.innerHTML=`${cl}<h3>Log Hours</h3>
-    <div class="fg">
-      <label>Date<input type="date" id="m-date" value="${new Date().toISOString().split('T')[0]}"></label>
-      <label>Project<select id="m-proj"><option value="">Select project...</option>${po()}</select></label>
-      <label>Hours<input type="number" id="m-hrs" step="0.5" min="0" placeholder="e.g. 2.5"></label>
-      <label>Billable?<select id="m-billable"><option>Yes</option><option>No</option></select></label>
-    </div>
-    <div class="fr"><label>Task Description</label><input id="m-desc" placeholder="What did you work on?"></div>
-    <div class="fr"><label>Notes</label><textarea id="m-notes" rows="2"></textarea></div>
-    <div class="mf"><button class="btn btn-outline" onclick="closeM()">Cancel</button><button class="btn btn-primary" onclick="saveM()">Log Hours</button></div>`;
-  } else if(type==='todo'){
-    const t=id?D.todos.find(x=>x.id===id):{};
-    mc.innerHTML=`${cl}<h3>${id?'Edit':'New'} Task</h3>
-    <div class="fr"><label>Task</label><input id="m-task" value="${esc(t.task||'')}"></div>
-    <div class="fg">
-      <label>Associated Project<select id="m-proj"><option value="">None</option>${po(t.proj||'')}</select></label>
-      <label>Priority<select id="m-pri">${oi(PRIS,t.pri||'')}</select></label>
-      <label>Date Assigned<input type="date" id="m-assigned" value="${t.assigned||''}"></label>
-      <label>Due Date<input type="date" id="m-due" value="${t.due||''}"></label>
-    </div>
-    <div class="fr"><label>Status</label><select id="m-status">${oi(STATS,t.status||'Not Started')}</select></div>
-    <div class="fr"><label>Notes</label><textarea id="m-notes" rows="2">${esc(t.notes||'')}</textarea></div>
-    <div class="mf"><button class="btn btn-outline" onclick="closeM()">Cancel</button><button class="btn btn-primary" onclick="saveM()">Save Task</button></div>`;
-  } else if(type==='resource'){
-    const r=id?D.resources.find(x=>x.id===id):{};
-    mc.innerHTML=`${cl}<h3>${id?'Edit':'Add'} Resource</h3>
-    <div class="fr"><label>Name</label><input id="m-name" value="${esc(r.name||'')}"></div>
-    <div class="fr"><label>Description</label><textarea id="m-desc" rows="2">${esc(r.desc||'')}</textarea></div>
-    <div class="fg">
-      <label>Category<select id="m-cat">${oi(RCATS,r.cat||'')}</select></label>
-      <label>Link / URL<input id="m-link" value="${esc(r.link||'')}"></label>
-    </div>
-    <div class="fr"><label>Notes</label><textarea id="m-notes" rows="2">${esc(r.notes||'')}</textarea></div>
-    <div class="mf"><button class="btn btn-outline" onclick="closeM()">Cancel</button><button class="btn btn-primary" onclick="saveM()">Save Resource</button></div>`;
-  } else if(type==='deliverable'){
-    mc.innerHTML=`${cl}<h3>Log Deliverable</h3>
-    <div class="fg">
-      <label>Project<select id="m-proj"><option value="">Select...</option>${po()}</select></label>
-      <label>Version<input id="m-ver" value="v1.0"></label>
-      <label>File / Doc Link<input id="m-link" placeholder="https://..."></label>
-      <label>Date<input type="date" id="m-date" value="${new Date().toISOString().split('T')[0]}"></label>
-      <label>Status<select id="m-status"><option>Draft</option><option>Ready for Review</option><option>Revisions Needed</option><option>Final</option></select></label>
-      <label>Reviewer<input id="m-reviewer"></label>
-    </div>
-    <div class="fr"><label>Comments</label><textarea id="m-comments" rows="2"></textarea></div>
-    <div class="mf"><button class="btn btn-outline" onclick="closeM()">Cancel</button><button class="btn btn-primary" onclick="saveM()">Log Deliverable</button></div>`;
-  }
+    <div class="form-row"><label>Attendees</label><input id="c-att" placeholder="e.g. Chrissy, Mark, Copywriter"></div>
+    <div class="form-row"><label>Call Notes / Summary</label><textarea id="c-notes" rows="4" placeholder="What was discussed? Key decisions, context, anything the copywriter needs to know."></textarea></div>
+    <div class="form-row"><label>Action Items</label>${aiRows}</div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModalForce()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCall()">Save Call</button>
+    </div>`);
+  addAIRow();
 }
 
-function closeM(){document.getElementById('overlay').classList.remove('open');}
-
-function saveM(){
-  const v=id=>(document.getElementById(id)?.value||'');
-  if(_mt==='project'){
-    const o={name:v('m-name'),type:v('m-type'),bucket:v('m-bucket'),req:v('m-req'),desc:v('m-desc'),pri:v('m-pri'),assigned:v('m-assigned'),due:v('m-due'),est:v('m-est'),actual:v('m-actual'),status:v('m-status'),draft:v('m-draft'),final:v('m-final'),notes:v('m-notes')};
-    if(!o.name.trim())return alert('Please enter a project name');
-    if(_mid){const i=D.projects.findIndex(x=>x.id===_mid);D.projects[i]={...D.projects[i],...o};}
-    else{o.id=NI.p++;D.projects.push(o);}
-  } else if(_mt==='hours'){
-    const o={id:NI.h++,date:v('m-date'),proj:v('m-proj'),desc:v('m-desc'),hrs:v('m-hrs'),billable:v('m-billable'),notes:v('m-notes')};
-    if(!o.proj)return alert('Please select a project');
-    D.hours.push(o);
-  } else if(_mt==='todo'){
-    const o={task:v('m-task'),proj:v('m-proj'),pri:v('m-pri'),assigned:v('m-assigned'),due:v('m-due'),status:v('m-status'),notes:v('m-notes')};
-    if(!o.task.trim())return alert('Please enter a task');
-    if(_mid){const i=D.todos.findIndex(x=>x.id===_mid);D.todos[i]={...D.todos[i],...o};}
-    else{o.id=NI.t++;D.todos.push(o);}
-  } else if(_mt==='resource'){
-    const o={name:v('m-name'),desc:v('m-desc'),cat:v('m-cat'),link:v('m-link'),notes:v('m-notes')};
-    if(!o.name.trim())return alert('Please enter a name');
-    if(_mid){const i=D.resources.findIndex(x=>x.id===_mid);D.resources[i]={...D.resources[i],...o};}
-    else{o.id=NI.r++;D.resources.push(o);}
-  } else if(_mt==='deliverable'){
-    const o={id:NI.d++,proj:v('m-proj'),ver:v('m-ver'),link:v('m-link'),date:v('m-date'),status:v('m-status'),reviewer:v('m-reviewer'),comments:v('m-comments')};
-    if(!o.proj)return alert('Please select a project');
-    D.deliverables.push(o);
-  }
-  closeM();renderAll();qSave();
+let aiRowCount=0;
+function addAIRow(){
+  const id=aiRowCount++;
+  const div=document.createElement('div');
+  div.style.cssText='display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap';
+  div.id='ai-row-'+id;
+  div.innerHTML=`<input placeholder="Action item..." style="flex:1;min-width:160px;padding:6px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;outline:none" id="air-text-${id}">
+    <input placeholder="Owner" style="width:100px;padding:6px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;outline:none" id="air-owner-${id}">
+    <input type="date" style="width:130px;padding:6px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;outline:none" id="air-due-${id}">
+    <select style="width:85px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;font-size:12px;outline:none" id="air-pri-${id}"><option>High</option><option selected>Medium</option><option>Low</option></select>
+    <button onclick="document.getElementById('ai-row-${id}').remove()" style="background:none;border:1px solid var(--border);border-radius:7px;padding:4px 8px;cursor:pointer;font-size:12px;color:var(--muted)">&#10005;</button>`;
+  document.getElementById('ai-rows').appendChild(div);
 }
 
-// Boot
-badge("loading");
+function saveCall(){
+  const title=document.getElementById('c-title').value.trim();
+  if(!title)return alert('Please enter a meeting title');
+  const rows=[...document.getElementById('ai-rows').children];
+  const ais=rows.map((row,i)=>{
+    const id_=row.id.replace('ai-row-','');
+    const text=document.getElementById('air-text-'+id_)?.value.trim();
+    if(!text)return null;
+    return{id:nextId.ai++,text,owner:document.getElementById('air-owner-'+id_)?.value||'',due:document.getElementById('air-due-'+id_)?.value||'',pri:document.getElementById('air-pri-'+id_)?.value||'Medium',done:false};
+  }).filter(Boolean);
+  data.calls.push({id:nextId.c++,title,date:document.getElementById('c-date').value,type:document.getElementById('c-type').value,attendees:document.getElementById('c-att').value,proj:document.getElementById('c-proj').value,notes:document.getElementById('c-notes').value,actionItems:ais});
+  closeModalForce();renderAll();
+}
+
+function openAddProject(){
+  modal(`<h3>Add Project</h3>
+    <div class="form-row"><label>Project Name</label><input id="m-name" placeholder="e.g. Q3 Case Study – Tech Ops"></div>
+    <div class="form-2col">
+      <div class="form-row"><label>Project Type</label><select id="m-type">${TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="form-row"><label>Marketing Bucket</label><select id="m-bucket">${BUCKETS.map(b=>`<option>${b}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-row"><label>Stakeholder / Requestor</label><input id="m-req"></div>
+    <div class="form-row"><label>Description</label><textarea id="m-desc" rows="2"></textarea></div>
+    <div class="form-2col">
+      <div class="form-row"><label>Priority</label><select id="m-pri">${PRIORITIES.map(p=>`<option>${p}</option>`).join('')}</select></div>
+      <div class="form-row"><label>Status</label><select id="m-status">${STATUSES.map(s=>`<option>${s}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-2col">
+      <div class="form-row"><label>Date Assigned</label><input id="m-assigned" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+      <div class="form-row"><label>Due Date</label><input id="m-due" type="date"></div>
+    </div>
+    <div class="form-2col">
+      <div class="form-row"><label>Est. Hours</label><input id="m-est" type="number"></div>
+      <div class="form-row"><label>Notes</label><input id="m-notes"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModalForce()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProject()">Add Project</button>
+    </div>`);
+}
+function saveProject(){
+  const n=document.getElementById('m-name').value.trim();
+  if(!n)return alert('Project name required');
+  data.projects.push({id:nextId.p++,name:n,type:document.getElementById('m-type').value,bucket:document.getElementById('m-bucket').value,req:document.getElementById('m-req').value,desc:document.getElementById('m-desc').value,pri:document.getElementById('m-pri').value,assigned:document.getElementById('m-assigned').value,due:document.getElementById('m-due').value,est:document.getElementById('m-est').value||'',actual:'',status:document.getElementById('m-status').value,notes:document.getElementById('m-notes').value});
+  closeModalForce();renderAll();
+}
+
+function openAddHours(){
+  modal(`<h3>Log Hours</h3>
+    <div class="form-2col">
+      <div class="form-row"><label>Date</label><input id="h-date" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+      <div class="form-row"><label>Hours</label><input id="h-hrs" type="number" step="0.5"></div>
+    </div>
+    <div class="form-row"><label>Project</label><select id="h-proj"><option value="">-- Select --</option>${data.projects.map(p=>`<option>${p.name}</option>`).join('')}</select></div>
+    <div class="form-row"><label>Task Description</label><textarea id="h-task" rows="2"></textarea></div>
+    <div class="form-2col">
+      <div class="form-row"><label>Billable?</label><select id="h-bill"><option>Yes</option><option>No</option></select></div>
+      <div class="form-row"><label>Notes</label><input id="h-notes"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModalForce()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveHours()">Log Hours</button>
+    </div>`);
+}
+function saveHours(){
+  const h=document.getElementById('h-hrs').value,p=document.getElementById('h-proj').value;
+  if(!h||!p)return alert('Project and hours required');
+  data.hours.push({id:nextId.h++,date:document.getElementById('h-date').value,proj:p,task:document.getElementById('h-task').value,hrs:parseFloat(h),billable:document.getElementById('h-bill').value,notes:document.getElementById('h-notes').value});
+  closeModalForce();renderHours();renderDash();
+}
+
+function openAddTodo(){
+  modal(`<h3>Add Task</h3>
+    <div class="form-row"><label>Task</label><input id="t-task"></div>
+    <div class="form-row"><label>Associated Project</label><input id="t-proj"></div>
+    <div class="form-2col">
+      <div class="form-row"><label>Priority</label><select id="t-pri">${PRIORITIES.map(p=>`<option>${p}</option>`).join('')}</select></div>
+      <div class="form-row"><label>Status</label><select id="t-status">${STATUSES.map(s=>`<option>${s}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-2col">
+      <div class="form-row"><label>Assigned</label><input id="t-assigned" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+      <div class="form-row"><label>Due Date</label><input id="t-due" type="date"></div>
+    </div>
+    <div class="form-row"><label>Notes</label><input id="t-notes"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModalForce()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTodo()">Add Task</button>
+    </div>`);
+}
+function saveTodo(){
+  const t=document.getElementById('t-task').value.trim();
+  if(!t)return alert('Task name required');
+  data.todos.push({id:nextId.t++,task:t,proj:document.getElementById('t-proj').value,pri:document.getElementById('t-pri').value,assigned:document.getElementById('t-assigned').value,due:document.getElementById('t-due').value,status:document.getElementById('t-status').value,notes:document.getElementById('t-notes').value});
+  closeModalForce();renderTodo();
+}
+
+function openAddResource(){
+  modal(`<h3>Add Resource</h3>
+    <div class="form-row"><label>Name</label><input id="r-name"></div>
+    <div class="form-row"><label>Description</label><textarea id="r-desc" rows="2"></textarea></div>
+    <div class="form-2col">
+      <div class="form-row"><label>Category</label><select id="r-cat"><option>Brand</option><option>Writing Style</option><option>Case Study</option><option>Newsletter</option><option>LinkedIn Examples</option><option>Website</option><option>Messaging</option><option>Templates</option><option>Other</option></select></div>
+      <div class="form-row"><label>Link</label><input id="r-link" placeholder="https://..."></div>
+    </div>
+    <div class="form-row"><label>Notes</label><input id="r-notes"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModalForce()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveResource()">Add Resource</button>
+    </div>`);
+}
+function saveResource(){
+  const n=document.getElementById('r-name').value.trim();
+  if(!n)return alert('Name required');
+  data.resources.push({id:nextId.r++,name:n,desc:document.getElementById('r-desc').value,cat:document.getElementById('r-cat').value,link:document.getElementById('r-link').value,notes:document.getElementById('r-notes').value});
+  closeModalForce();renderResources();
+}
+
+function openAddDeliverable(){
+  modal(`<h3>Log Deliverable</h3>
+    <div class="form-row"><label>Project</label><select id="d-proj"><option value="">-- Select --</option>${data.projects.map(p=>`<option>${p.name}</option>`).join('')}</select></div>
+    <div class="form-2col">
+      <div class="form-row"><label>Version</label><input id="d-ver" placeholder="v1.0"></div>
+      <div class="form-row"><label>Date Submitted</label><input id="d-date" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+    </div>
+    <div class="form-row"><label>File Link</label><input id="d-link" placeholder="Google Drive URL"></div>
+    <div class="form-2col">
+      <div class="form-row"><label>Status</label><select id="d-status"><option>Draft</option><option>Ready for Review</option><option>Revisions Needed</option><option>Final</option></select></div>
+      <div class="form-row"><label>Reviewer</label><input id="d-reviewer"></div>
+    </div>
+    <div class="form-row"><label>Comments</label><textarea id="d-comments" rows="2"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModalForce()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveDeliverable()">Log Deliverable</button>
+    </div>`);
+}
+function saveDeliverable(){
+  const p=document.getElementById('d-proj').value;
+  if(!p)return alert('Project required');
+  data.deliverables.push({id:nextId.d++,proj:p,ver:document.getElementById('d-ver').value||'v1.0',link:document.getElementById('d-link').value,date:document.getElementById('d-date').value,status:document.getElementById('d-status').value,reviewer:document.getElementById('d-reviewer').value,comments:document.getElementById('d-comments').value});
+  closeModalForce();renderDeliverables();
+}
+
 renderDash();
-sbLoad().then(state=>{
-  if(state&&Object.keys(state).length>0){
-    if(state.projects?.length)    D.projects=state.projects;
-    if(state.hours?.length)       D.hours=state.hours;
-    if(state.todos?.length)       D.todos=state.todos;
-    if(state.resources?.length)   D.resources=state.resources;
-    if(state.deliverables?.length) D.deliverables=state.deliverables;
-    if(state.nextId) Object.assign(NI,state.nextId);
-    renderAll();
-  }
-  badge("saved");
-}).catch(()=>badge("error"));
 </script>
-</body>
-</html>
